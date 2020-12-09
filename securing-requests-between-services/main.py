@@ -1,7 +1,6 @@
 import os
 
 import flask
-import google.auth
 import google.auth.transport.requests
 import requests
 from google.oauth2 import id_token
@@ -80,6 +79,7 @@ def receive_signed_request():
             raise Exception('Invalid "iss" in identity token')
 
         # At this point the identity token looks good. Do we trust the caller?
+        # You can use the email or sub fields to see who made the request.
         if identity['email'] not in _authorized_request_identities():
             raise Exception('Invalid "email" in identity token')
 
