@@ -1,0 +1,7 @@
+runtime: python38
+
+handlers:
+
+  - url: /.*
+    secure: always
+    script: auto
