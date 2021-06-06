@@ -63,7 +63,7 @@ def find_local_files(start: str):
         for filename in p.glob('**/output-*'):
             yield open(filename, 'rb')
     else:
-        yield open(filename, 'rb')
+        yield open(p, 'rb')
 
 
 def read_records(fh):

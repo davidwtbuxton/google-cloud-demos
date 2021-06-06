@@ -154,3 +154,12 @@ def crc(data):
     32-bit CRC-32C checksum of data as long.
   """
   return crc_finalize(crc_update(CRC_INIT, data))
+
+
+try:
+  import google_crc32c
+except ImportError:
+  import warnings
+  warnings.warn('google-crc32c not installed, using (slow) Python version')
+else:
+  crc_update = google_crc32c.extend
