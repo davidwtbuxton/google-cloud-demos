@@ -1,0 +1,2 @@
+# Use this with `gcloud app deploy .` to deploy to App Engine.
+runtime: python39
