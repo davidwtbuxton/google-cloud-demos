@@ -2,6 +2,7 @@
 # in LevelDB log format.
 #
 # https://cloud.google.com/datastore/docs/export-import-entities
+import datetime
 import os
 import pathlib
 import re
@@ -11,6 +12,10 @@ from google.cloud import storage
 from google.cloud.ndb import _legacy_entity_pb as entity_pb
 
 from . import records
+
+
+UTF8 = 'utf-8'
+EPOCH = datetime.datetime.utcfromtimestamp(0)
 
 
 # I am guessing the overall_export_metadata and export_metadata files are also
@@ -25,6 +30,37 @@ def key_path_as_tuples(path):
     for element in path.element_list():
         value = element.id if element.has_id() else element.name
         result.append((element.type, value))
+
+    return result
+
+
+def datastore_when_as_datetime(value):
+    """Convert the time as microseconds to a Python datetime."""
+    return EPOCH + datetime.timedelta(microseconds=value)
+
+
+def get_entity_properties(pb):
+    """Convert a protobuf's properties to a Python dict.
+
+    Datetime property types are converted to Python datetime instances.
+    """
+    # Same as google/cloud/ndb/_legacy_entity_pb.py:EntityProto.entity_props
+    # but with more type conversions.
+    result = {}
+
+    for prop in pb.property_list():
+        name = prop.name().decode(UTF8)
+        if prop.has_value():
+            value = pb._get_property_value(prop.value())
+        else:
+            value = None
+
+        # What about BLOB, TEXT, BYTESTRING, GEORSS_POINT, EMPTY_LIST ?
+        if prop.has_meaning():
+            if prop.meaning() == entity_pb.Property.GD_WHEN:
+                value = datastore_when_as_datetime(value)
+
+        result[name] = value
 
     return result
 
@@ -85,8 +121,9 @@ def read_records(fh):
             'database_id': key.database_id,
             'app': key.app,
         }
+        props = get_entity_properties(pb)
 
-        yield entity_key, pb.entity_props()
+        yield entity_key, props
 
 
 def find_records(start: str):

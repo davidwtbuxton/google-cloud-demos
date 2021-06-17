@@ -1,4 +1,5 @@
 import base64
+import datetime
 import json
 
 from google.cloud.ndb import _legacy_entity_pb as entity_pb
@@ -6,7 +7,9 @@ from google.cloud.ndb import _legacy_entity_pb as entity_pb
 
 class EntityEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, entity_pb.PropertyValue_ReferenceValuePathElement):
+        if isinstance(obj, datetime.datetime):
+            return str(obj)
+        elif isinstance(obj, entity_pb.PropertyValue_ReferenceValuePathElement):
             id_or_name = obj.id() if obj.has_id() else obj.name()
             return obj.type(), id_or_name
         elif isinstance(obj, entity_pb.PropertyValue_PointValue):
