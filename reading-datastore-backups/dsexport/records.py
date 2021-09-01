@@ -219,7 +219,7 @@ class RecordsWriter(object):
     """Write single physical record."""
     length = len(data)
 
-    crc = crc32c.crc_update(crc32c.CRC_INIT, [record_type])
+    crc = crc32c.crc_update(crc32c.CRC_INIT, bytes([record_type]))
     crc = crc32c.crc_update(crc, data)
     crc = crc32c.crc_finalize(crc)
 
@@ -314,7 +314,7 @@ class RecordsReader(object):
     if record_type == RECORD_TYPE_NONE:
       return ('', record_type)
 
-    actual_crc = crc32c.crc_update(crc32c.CRC_INIT, [record_type])
+    actual_crc = crc32c.crc_update(crc32c.CRC_INIT, bytes([record_type]))
     actual_crc = crc32c.crc_update(actual_crc, data)
     actual_crc = crc32c.crc_finalize(actual_crc)
 
