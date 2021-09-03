@@ -1,0 +1,2 @@
+bottle==0.12.19
+google-cloud-logging==2.6.0
