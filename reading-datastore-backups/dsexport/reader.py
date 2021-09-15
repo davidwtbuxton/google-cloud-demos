@@ -39,6 +39,17 @@ def datastore_when_as_datetime(value):
     return EPOCH + datetime.timedelta(microseconds=value)
 
 
+def try_text_decode(value):
+    """Try to decode a value from UTF-8."""
+    if isinstance(value, bytes):
+        try:
+            value = value.decode(UTF8)
+        except UnicodeDecodeError:
+            pass
+
+    return value
+
+
 def get_entity_properties(pb):
     """Convert a protobuf's properties to a Python dict.
 
@@ -46,6 +57,11 @@ def get_entity_properties(pb):
     """
     # Same as google/cloud/ndb/_legacy_entity_pb.py:EntityProto.entity_props
     # but with more type conversions.
+    meaning_decoders = {
+        entity_pb.Property.NO_MEANING: try_text_decode,
+        entity_pb.Property.TEXT: try_text_decode,
+        entity_pb.Property.GD_WHEN: datastore_when_as_datetime,
+    }
     result = {}
 
     for prop in pb.property_list():
@@ -56,9 +72,10 @@ def get_entity_properties(pb):
             value = None
 
         # What about BLOB, TEXT, BYTESTRING, GEORSS_POINT, EMPTY_LIST ?
-        if prop.has_meaning():
-            if prop.meaning() == entity_pb.Property.GD_WHEN:
-                value = datastore_when_as_datetime(value)
+        # String and integer properties have meaning NO_MEANING.
+        meaning = prop.meaning()
+        if meaning in meaning_decoders:
+            value = meaning_decoders[meaning](value)
 
         result[name] = value
 
