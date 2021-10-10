@@ -1,0 +1,3 @@
+runtime: python39
+# Required to use the legacy APIs.
+app_engine_apis: true
