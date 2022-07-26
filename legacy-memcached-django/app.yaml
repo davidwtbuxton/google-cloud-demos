@@ -1,0 +1,4 @@
+runtime: python39
+
+# Required for use of google.appengine.api.memcache API.
+app_engine_apis: true
