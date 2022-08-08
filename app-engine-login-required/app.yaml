@@ -1,0 +1,18 @@
+runtime: python39
+app_engine_apis: true
+
+handlers:
+
+  - url: /admin
+    script: auto
+    login: admin
+    secure: always
+
+  - url: /required
+    script: auto
+    login: required
+    secure: always
+
+  - url: /
+    script: auto
+    secure: always
