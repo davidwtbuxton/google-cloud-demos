@@ -5,11 +5,13 @@ Add this script to the source code repository. Then use this in a script step
 in the Cloud Build job. Node images include Python 3, so you can use this
 helper like:
 
+    # cloudbuild.yaml
     steps:
     - name: node:16
         script: |
-        git config --system credential.helper /workspace/githelper.py
-        npm ci
+          set -o errexit -o nounset -o pipefail
+          git config --system credential.helper /workspace/githelper.py
+          npm ci
 """
 import json
 import io
