@@ -1,0 +1,5 @@
+Django==4.0.7
+Wagtail==3.0.1
+django-storages[google]==1.13
+appengine-python-standard==1.0.0
+google-cloud-logging==3.2.1
