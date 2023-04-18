@@ -13,7 +13,8 @@ can use this helper like:
     steps:
       - name: node:16
         script: |
-          set -o errexit -o nounset -o pipefail
+          set -o errexit -o nounset
+          # And `set -o pipefail` when using bash.
           git config --system credential.helper /workspace/githelper.py
           npm ci
 
