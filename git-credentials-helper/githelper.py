@@ -9,8 +9,11 @@ helper like:
     steps:
     - name: node:16
         script: |
-          set -o errexit -o nounset -o pipefail
-          git config --system credential.helper /workspace/githelper.py
+          set -o errexit -o nounset
+          # And `set -o pipefail` when using bash.
+          _helper="/workspace/githelper.py"
+          chmod a+x "$_helper"
+          git config --system credential.helper "$_helper"
           npm ci
 """
 import json
@@ -61,7 +64,8 @@ def fetch_auth_token(token_url=METADATA_TOKEN_URL):
     headers = {"Metadata-Flavor": "Google"}
     request = urllib.request.Request(token_url, headers=headers)
     response = urllib.request.urlopen(request)
-    data = json.load(response)
+    text = response.read().decode("utf-8")
+    data = json.loads(text)
 
     return data["access_token"]
 

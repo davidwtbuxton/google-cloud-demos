@@ -15,7 +15,9 @@ can use this helper like:
         script: |
           set -o errexit -o nounset
           # And `set -o pipefail` when using bash.
-          git config --system credential.helper /workspace/githelper.py
+          _helper="/workspace/githelper.py"
+          chmod a+x "$_helper"
+          git config --system credential.helper "$_helper"
           npm ci
 
 Related documentation:
