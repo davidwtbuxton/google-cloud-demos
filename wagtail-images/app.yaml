@@ -1,0 +1,14 @@
+runtime: python311
+app_engine_apis: true  # Required to use the Images API.
+env_variables:
+  DJANGO_SETTINGS_MODULE: "demo.settings.production"
+
+handlers:
+
+  - url: /static
+    static_dir: static
+    secure: always
+
+  - url: /.*
+    script: auto
+    secure: always

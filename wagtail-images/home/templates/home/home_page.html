@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+{{ page.intro|richtext }}
+
+{% for post in page.get_children %}
+    <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+    {{ post.specific.intro }}
+    {{ post.specific.body|richtext }}
+{% endfor %}
+
+{% endblock content %}
