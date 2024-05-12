@@ -1,0 +1,16 @@
+[build-system]
+requires = ['hatchling']
+build-backend = 'hatchling.build'
+
+[project]
+name = 'wagtail-images'
+version = '0.1'
+dependencies = [
+    'Django ~= 4.2.0',
+    'Wagtail ~= 6.0.0',
+    'django-storages[google]',
+    'appengine-python-standard',
+    'google-cloud-logging',
+    'jinja2',
+    'psycopg[binary]',
+]
